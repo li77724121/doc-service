@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交付样板｜一次真实的处理长什么样</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--fg:#e8eaed;--muted:#9aa3b2;--acc:#4da3ff;--ok:#37d67a;--line:#242938}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,"PingFang SC",system-ui,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:28px 20px 70px}
+h1{font-size:24px;margin:0 0 4px}
+h2{font-size:18px;margin:30px 0 10px;border-left:3px solid var(--acc);padding-left:10px}
+p{color:var(--muted)}
+pre{background:#12151c;border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;font-size:13.5px;color:#cfd6e3}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left}
+th{color:var(--muted);font-weight:500}
+.ok{color:var(--ok)}
+a{color:var(--acc)}
+.back{display:inline-block;margin-bottom:18px;color:var(--acc);text-decoration:none}
+</style>
+</head>
+<body><div class="wrap">
+<a class="back" href="./">← 回到下单页</a>
+<h1>交付样板：一次真实处理</h1>
+<p>下面这条不是示意图，是脚本在本机跑出来的真实产物。你可以拿手上的文件套同一套流程。</p>
+
+<h2>输入（客户给什么）</h2>
+<table>
+  <tr><th>文件</th><th>类型</th><th>问题</th></tr>
+  <tr><td>客户台账_原始.xlsx</td><td>Excel 5 行 × 8 列</td><td>有重复行、格式不统一</td></tr>
+  <tr><td>采购单样例.pdf</td><td>PDF（无表格结构）</td><td>需要从文本里抽字段</td></tr>
+  <tr><td>发票扫描件.png</td><td>扫描图片</td><td>需要 OCR 才能读</td></tr>
+</table>
+
+<h2>输出（你拿到什么）</h2>
+<table>
+  <tr><th>产物</th><th>说明</th><th>结果</th></tr>
+  <tr><td>客户台账_清洗后.xlsx</td><td>去重 + 列名规范化</td><td class="ok">5 行 × 8 列，删除完全重复行 1 行</td></tr>
+  <tr><td>客户台账_清洗后.report.md</td><td><b>处理报告（验收单）</b></td><td class="ok">见下</td></tr>
+  <tr><td>采购单.csv</td><td>PDF 文本 → 结构化字段</td><td class="ok">抽出 单据号 / 金额 / 日期</td></tr>
+  <tr><td>发票字段.csv</td><td>扫图 OCR → 结构化字段</td><td class="ok">OCR 157 字，抽出 单据号 / 金额 / 日期 / 邮箱</td></tr>
+</table>
+
+<h2>处理报告（这就是验收方式）</h2>
+<pre># 数据质量报告（AI 自动生成，需人工复核）
+
+- 行数：5｜列数：8
+- 列名：单据号, 客户, 金额, 日期, 联系人, 电话, 备注, _source
+
+- 空值列：无
+- 完全重复行：1
+- 金额 合计：29,105.50（非空 4 行）
+- 电话 未做合计（标识/号码类，求和没有意义）
+
+## 需要你确认的点
+1. 上表空值/重复是否符合你的预期？
+2. 金额合计是否与原件一致？
+3. 是否还有需要额外提取的字段？</pre>
+
+<h2>抽出来的字段长这样</h2>
+<pre>采购单.csv（PDF → 文本字段）
+单据号,金额,日期
+2026-0914,"9,620.00",2026-10-08
+
+发票字段.csv（扫图 OCR → 字段）
+单据号,金额,日期,邮箱
+INV-2026-0914,"1,234.50",2026-10-15,amy@northwind.example</pre>
+
+<h2>为什么敢让你先试</h2>
+<p>因为处理报告会明说「哪些行系统判断不确定」。你不需要信任我的准确率承诺，你只需要看报告的那 3 个问题，核对那几行。</p>
+
+<p style="margin-top:26px"><a href="./">← 回到下单页（先免费试做 3 页）</a></p>
+</div></body>
+</html>
